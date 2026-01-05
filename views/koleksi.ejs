@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koleksi Buku | Perpustakaan DPR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900">
+
+    <div class="flex min-h-screen">
+        <aside class="w-20 lg:w-64 bg-white border-r flex flex-col items-center py-6 shrink-0 shadow-sm">
+            <div class="mb-10 text-blue-600 text-3xl font-bold italic">DPR.</div>
+            
+            <nav class="flex flex-col space-y-8 items-center lg:items-start w-full px-6">
+                
+                <a href="/" class="flex items-center space-x-4 text-gray-400 hover:text-blue-600 font-bold group w-full transition-all">
+                    <div class="p-2 rounded-xl bg-transparent group-hover:bg-blue-50 transition-all">
+                        <i class="fa-solid fa-table-cells-large text-xl"></i>
+                    </div>
+                    <span class="hidden lg:block">Dashboard</span>
+                </a>
+
+                <% if (user.role === 'admin') { %>
+                <a href="/admin" class="flex items-center space-x-4 text-gray-400 hover:text-blue-600 font-bold group w-full transition-all">
+                    <div class="p-2 rounded-xl bg-transparent group-hover:bg-blue-50 transition-all">
+                        <i class="fa-solid fa-user-shield text-xl"></i>
+                    </div>
+                    <span class="hidden lg:block">Admin Panel</span>
+                </a>
+                <% } %>
+
+                <a href="/koleksi" class="flex items-center space-x-4 text-blue-600 font-bold group w-full transition-all">
+                    <div class="p-2 rounded-xl bg-blue-50 transition-all">
+                        <i class="fa-solid fa-book text-xl"></i>
+                    </div>
+                    <span class="hidden lg:block">Koleksi</span>
+                </a>
+
+                <a href="/logout" class="flex items-center space-x-4 text-gray-400 hover:text-red-500 font-bold group w-full pt-10 transition-all">
+                    <div class="p-2 rounded-xl bg-transparent group-hover:bg-red-50 transition-all">
+                        <i class="fa-solid fa-right-from-bracket text-xl"></i>
+                    </div>
+                    <span class="hidden lg:block">Keluar</span>
+                </a>
+
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-10">
+                <div>
+                    <h1 class="text-3xl font-black text-gray-800 tracking-tight">Seluruh Koleksi</h1>
+                    <p class="text-gray-400 text-sm">Menampilkan semua buku yang tersedia di perpustakaan.</p>
+                </div>
+                
+                <div class="w-1/3 bg-white border border-gray-200 rounded-2xl px-4 py-3 flex items-center shadow-sm focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+                    <i class="fa-solid fa-magnifying-glass text-gray-300 mr-3"></i>
+                    <input type="text" id="koleksiSearch" placeholder="Cari di semua koleksi..." class="outline-none text-sm w-full bg-transparent">
+                </div>
+            </div>
+
+            <div id="koleksiGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                <% daftarBuku.forEach(buku => { %>
+                    <div class="bg-white p-4 rounded-[2.5rem] shadow-sm border border-gray-100 group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative">
+                        <div class="aspect-[3/4] bg-gradient-to-tr from-blue-700 to-indigo-500 rounded-[2rem] mb-4 flex items-center justify-center p-6 text-center relative overflow-hidden">
+                            <span class="text-white font-bold text-sm leading-tight drop-shadow-md tracking-tight"><%= buku.judul %></span>
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all duration-300 backdrop-blur-sm">
+                                <% if (buku.stok > 0) { %>
+                                    <form action="/pinjam/<%= buku.id %>" method="POST">
+                                        <button type="submit" class="bg-white text-blue-600 px-6 py-2 rounded-xl font-bold text-xs hover:scale-110 transition-transform shadow-lg">PINJAM SEKARANG</button>
+                                    </form>
+                                <% } else { %>
+                                    <span class="bg-red-500 text-white px-6 py-2 rounded-xl font-bold text-xs shadow-lg uppercase">Stok Habis</span>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="px-2">
+                            <h3 class="font-bold text-sm text-gray-800 truncate" title="<%= buku.judul %>"><%= buku.judul %></h3>
+                            <p class="text-[10px] text-gray-400 font-medium mb-2 truncate"><%= buku.penulis %></p>
+                            <span class="text-[10px] font-black <%= buku.stok > 0 ? 'text-emerald-500' : 'text-red-500' %> uppercase">
+                                ● <%= buku.stok %> Tersedia
+                            </span>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Script pencarian lokal untuk halaman koleksi
+        const searchInput = document.getElementById('koleksiSearch');
+        const koleksiGrid = document.getElementById('koleksiGrid');
+
+        searchInput.addEventListener('input', async (e) => {
+            const query = e.target.value;
+            const res = await fetch(`/search?q=${query}`);
+            const buku = await res.json();
+
+            koleksiGrid.innerHTML = buku.map(item => `
+                <div class="bg-white p-4 rounded-[2.5rem] shadow-sm border border-gray-100 group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative">
+                    <div class="aspect-[3/4] bg-gradient-to-tr from-blue-700 to-indigo-500 rounded-[2rem] mb-4 flex items-center justify-center p-6 text-center relative overflow-hidden">
+                        <span class="text-white font-bold text-sm leading-tight">${item.judul}</span>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300 backdrop-blur-sm">
+                            ${item.stok > 0 ? 
+                                `<form action="/pinjam/${item.id}" method="POST"><button class="bg-white text-blue-600 px-6 py-2 rounded-xl font-bold text-xs">PINJAM SEKARANG</button></form>` : 
+                                `<span class="bg-red-500 text-white px-6 py-2 rounded-xl font-bold text-xs uppercase">Stok Habis</span>`}
+                        </div>
+                    </div>
+                    <div class="px-2">
+                        <h3 class="font-bold text-sm text-gray-800 truncate">${item.judul}</h3>
+                        <p class="text-[10px] text-gray-400 font-medium mb-2 truncate">${item.penulis}</p>
+                        <span class="text-[10px] font-black ${item.stok > 0 ? 'text-emerald-500' : 'text-red-500'} uppercase">● ${item.stok} Tersedia</span>
+                    </div>
+                </div>
+            `).join('');
+        });
+    </script>
+</body>
+</html>

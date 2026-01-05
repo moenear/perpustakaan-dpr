@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun | Perpustakaan DPR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 font-sans flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white w-full max-w-md p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-slate-100">
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl mb-4">
+                <i class="fa-solid fa-user-plus text-2xl"></i>
+            </div>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Sign Up</h1>
+            <p class="text-slate-400 text-sm mt-2">Daftar sekarang untuk akses penuh koleksi buku.</p>
+        </div>
+
+        <form action="/signup" method="POST" class="space-y-6">
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Nama Lengkap</label>
+                <div class="relative">
+                    <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                    <input type="text" name="nama" placeholder="Masukkan nama anda" 
+                           class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm" required>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Alamat Email</label>
+                <div class="relative">
+                    <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                    <input type="email" name="email" placeholder="nama@email.com" 
+                           class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm" required>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Buat Password</label>
+                <div class="relative">
+                    <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                    <input type="password" name="password" placeholder="••••••••" 
+                           class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm" required>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all active:scale-95 flex items-center justify-center space-x-2">
+                <span>Daftar Sekarang</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+        </form>
+
+        <div class="mt-10 pt-6 border-t border-slate-50 text-center">
+            <p class="text-sm text-slate-400">
+                Sudah punya akun? 
+                <a href="/login" class="text-blue-600 font-bold hover:underline ml-1">Login</a>
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
